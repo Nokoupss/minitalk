@@ -6,7 +6,7 @@
 /*   By: nbelkace <nbelkace@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 05:19:38 by nadjy             #+#    #+#             */
-/*   Updated: 2024/10/05 03:45:49 by nbelkace         ###   ########.fr       */
+/*   Updated: 2024/10/05 20:29:08 by nbelkace         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,11 @@ char	*letter_to_string(char *s1, char letter)
 
 	i = 0;
 	j = 0;
+	if (s1 == NULL)
+	{
+		exit(0);
+		return (NULL);
+	}
 	tab = malloc((ft_strlen(s1) + 2) * sizeof(char));
 	if (tab == NULL)
 		return (NULL);

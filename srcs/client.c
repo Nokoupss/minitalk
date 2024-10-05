@@ -6,7 +6,7 @@
 /*   By: nbelkace <nbelkace@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 05:19:42 by nadjy             #+#    #+#             */
-/*   Updated: 2024/10/05 03:38:10 by nbelkace         ###   ########.fr       */
+/*   Updated: 2024/10/05 06:22:47 by nbelkace         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,6 @@ void	acknowledgment_handler(int signum)
 {
 	(void)signum;
 }
-
 
 int	main(int argc, char **argv)
 {
