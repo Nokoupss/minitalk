@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   client.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nadjy <nadjy@student.42.fr>                +#+  +:+       +#+        */
+/*   By: nbelkace <nbelkace@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 05:19:42 by nadjy             #+#    #+#             */
-/*   Updated: 2024/10/03 03:28:10 by nadjy            ###   ########.fr       */
+/*   Updated: 2024/10/05 03:38:10 by nbelkace         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,31 +41,35 @@ void	send_signals(int pid, char *message)
 	}
 }
 
+void	acknowledgment_handler(int signum)
+{
+	(void)signum;
+}
+
+
 int	main(int argc, char **argv)
 {
 	int		pid;
 	char	*message;
-	
-	if (argc == 1 || argc == 2)
+
+	if (argc != 3)
 	{
-		ft_printf("Error, Too few arguments, please enter as follow : ./client <PID> <MESSAGE>");
+		ft_printf("Error, wrong arguments, please enter as follow : ./client <PID> <MESSAGE>");
 		return (1);
 	}
-	else if (argc == 3)
+	pid = ft_atoi(argv[1]);
+	if (pid == 0)
 	{
-		pid = ft_atoi(argv[1]);
-		if (pid == 0)
-		{
-			ft_printf("Error, No server PID found");
-			return (1);
-		}
-		message = argv[2];
-		if (message[0] == '\0')
-		{
-			ft_printf("Error, No message found");
-			return (1);
-		}
-		send_signals(pid, message);
+		ft_printf("Error, No server PID found");
+		return (1);
 	}
+	message = argv[2];
+	if (message[0] == '\0')
+	{
+		ft_printf("Error, No message found");
+		return (1);
+	}
+	signal(SIGUSR1, acknowledgment_handler);
+	send_signals(pid, message);
 	return (0);
 }

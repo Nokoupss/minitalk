@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   server.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nadjy <nadjy@student.42.fr>                +#+  +:+       +#+        */
+/*   By: nbelkace <nbelkace@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 05:19:38 by nadjy             #+#    #+#             */
-/*   Updated: 2024/10/03 04:07:54 by nadjy            ###   ########.fr       */
+/*   Updated: 2024/10/05 03:45:49 by nbelkace         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,30 +51,33 @@ char	*letter_to_string(char *s1, char letter)
 	return (tab);
 }
 
-void	signal_handler(int signum)
+void    signal_handler(int signum, siginfo_t *info, void *context)
 {
-	static char	*message;
-	static int	ascii = 0;
-	static int	bit = 0;
+    static char    *message;
+    static int    ascii = 0;
+    static int    bit = 0;
+    pid_t        client_pid;
 
-	if (message == NULL)
-		message = ft_strdup("");
-	if (signum == SIGUSR1)
-		ascii = ascii + 0;
-	else if (signum == SIGUSR2)
-		ascii = ascii + (1 * ft_recursive_power(2, 7 - bit));
-	bit++;
-	if (bit == 8)
-	{
-		message = letter_to_string(message, ascii);
-		if (ascii == '\0')
-		{
-			ft_printf("%s\n", message);
-			message = NULL;
-		}
-		ascii = 0;
-		bit = 0;
-	}
+    (void)context;
+    client_pid = info->si_pid;
+    if (message == NULL)
+        message = ft_strdup("");
+    if (signum == SIGUSR1)
+        ascii = ascii + 0;
+    else if (signum == SIGUSR2)
+        ascii = ascii + (1 * ft_recursive_power(2, 7 - bit));
+    bit++;
+    if (bit == 8)
+    {
+        message = letter_to_string(message, ascii);
+        if (ascii == '\0')
+            ft_printf("%s\n", message);
+        if (ascii == '\0')
+            message = NULL;
+        ascii = 0;
+        bit = 0;
+    }
+    kill(client_pid, SIGUSR1);
 }
 
 int	main(void)
@@ -82,10 +85,10 @@ int	main(void)
 	struct sigaction	signal;
 
 	sigemptyset(&signal.sa_mask);
+	signal.sa_sigaction = signal_handler;
+	signal.sa_flags = SA_SIGINFO;
 	ft_printf("Server's Open...\n");
 	ft_printf("Server's PID: %d\n", getpid());
-	signal.sa_handler = signal_handler;
-	signal.sa_flags = 0;
 	sigaction(SIGUSR1, &signal, NULL);
 	sigaction(SIGUSR2, &signal, NULL);
 	while (1)
